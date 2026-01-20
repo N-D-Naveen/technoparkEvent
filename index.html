@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Technopark Events</title>
+</head>
+<body>
+
+  <h1>Technopark Events</h1>
+
+  <!-- Upload Event -->
+  <h2>Create Event</h2>
+
+  <input type="text" id="location" placeholder="Location" /><br/><br/>
+  <input type="date" id="eventDate" /><br/><br/>
+  <input type="file" id="image" /><br/><br/>
+  <button onclick="createEvent()">Upload Event</button>
+
+  <hr/>
+
+  <!-- View Events -->
+  <h2>Events</h2>
+  <div id="events"></div>
+
+  <script>
+    const API_BASE = "https://bkgx9cxcmj.execute-api.us-east-1.amazonaws.com/Event_Dev/";
+
+    async function createEvent() {
+      try {
+        const fileInput = document.getElementById("image");
+        const file = fileInput.files[0];
+
+        if (!file) {
+          alert("Please select an image");
+          return;
+        }
+
+        // 1️⃣ Get presigned URL
+        const uploadUrlResponse = await fetch(`${API_BASE}/events/upload-url`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            fileName: file.name,
+            contentType: file.type
+          })
+        });
+
+        const { uploadUrl, imageUrl } = await uploadUrlResponse.json();
+
+        // 2️⃣ Upload image directly to S3
+        await fetch(uploadUrl, {
+          method: "PUT",
+          headers: { "Content-Type": file.type },
+          body: file
+        });
+
+        // 3️⃣ Save metadata
+        await fetch(`${API_BASE}/events`, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            title: document.getElementById("title").value,
+            location: document.getElementById("location").value,
+            eventDate: document.getElementById("eventDate").value,
+            imageUrl: imageUrl
+          })
+        });
+
+        alert("Event created successfully");
+        loadEvents();
+
+      } catch (err) {
+        console.error(err);
+        alert("Failed to create event");
+      }
+    }
+
+    async function loadEvents() {
+      const response = await fetch(`${API_BASE}/events`);
+      const events = await response.json();
+      console.log("events",typeof(events),events)
+      const container = document.getElementById("events");
+      container.innerHTML = "";
+
+      events.forEach(event => {
+        const div = document.createElement("div");
+
+        div.innerHTML = `
+          <p><strong>Date:</strong> ${event.createdTs}</p>
+          <p><strong>Location:</strong> ${event.location}</p>
+          <img src="${event.imageURL}" width="300"/>
+          <hr/>
+        `;
+
+        container.appendChild(div);
+      });
+    }
+
+    loadEvents();
+  </script>
+
+</body>
+</html>
