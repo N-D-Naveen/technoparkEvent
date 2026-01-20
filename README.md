@@ -28,12 +28,9 @@ The application uses **AWS Lambda** for business logic, **DynamoDB** for data st
 
 ---
 
-## 🏗️ Architecture
+## 🏗️ Architecture Diagram
 
-```
-Client ⇄ API Gateway ⇄ Lambda ⇄ DynamoDB
-                           ⇄ S3
-```
+![Technopark Event Architecture](docs/architecture.png)
 
 ### Flow Explanation:
 
