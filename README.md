@@ -7,16 +7,16 @@ An **event-driven web application** built using **AWS Serverless Architecture** 
 
 ## 📑 Table of Contents
 
-* [Overview](#overview)
-* [Architecture](#architecture)
-* [Tech Stack](#tech-stack)
-* [Key Learnings](#key-learnings)
+* [Overview](#-overview)
+* [Architecture](#-architecture)
+* [Tech Stack](#-tech-stack)
+* [Key Learnings](#-key-learnings)
 
-  * [Permissions & Security](#permissions--security)
-  * [API Gateway](#api-gateway)
-  * [Architecture Decisions](#architecture-decisions)
-* [Best Practices Followed](#best-practices-followed)
-* [Future Improvements](#future-improvements)
+  * [Permissions & Security](#-permissions--security)
+  * [API Gateway](#-api-gateway)
+  * [Architecture Decisions](#-architecture-decisions)
+* [Best Practices Followed](#-best-practices-followed)
+* [Future Improvements](#-future-improvements)
 
 ---
 
