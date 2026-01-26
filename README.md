@@ -81,13 +81,30 @@ const headers = {
   "Access-Control-Allow-Methods": "OPTIONS,GET"
 };
 ```
+4. **Why POST requests are more strict:**
+     * GET requests are "simple requests" - no preflight needed
+     * POST with JSON is a "non-simple request" - browser sends OPTIONS preflight first
+     * If API doesn't handle OPTIONS, the POST request fails with CORS error
 
+   * **Understanding CORS in this architecture:**
+     * **API Gateway CORS** = permission to SEND the API call to Lambda
+     * **Lambda CORS headers** = permission to READ the data in the browser returned by Lambda
+     * **S3 CORS** = permission to enter the storage room
+     * Both API Gateway CORS and Lambda CORS headers are needed for the request-response cycle
+     * S3 CORS is additionally needed if your front-end uploads to S3
 ---
 
 ### 🌐 API Gateway
 
 * API Gateway generates the **invoke URL only after deployment**
 * The deployed URL is used by the frontend to communicate with Lambda
+
+**Throttling Configuration:**
+
+* Throttling can be set at the **stage level** to control API request rates
+* **Rate Limit** = Expected number of requests per second
+* **Burst Limit** = Maximum allowed requests per second/per IP
+* When limits are exceeded, AWS API Gateway returns a **503 error** (Service Unavailable)
 
 ---
 
